@@ -649,23 +649,61 @@
     $("btnCopy").addEventListener("click", ()=> copyText($("output").value || buildPrompt()));
 
     $("btnSave").addEventListener("click", ()=>{
-      $("btnClear").addEventListener("click", () => {
-  // Reset all selects to first option
-  document.querySelectorAll("select").forEach(s => s.selectedIndex = 0);
+    $("btnClear").addEventListener("click", () => {
+  // 1) If you added autosave earlier, clear it so it doesn’t “restore” your old picks
+  localStorage.removeItem("prompt_studio_autosave_v1");
+  localStorage.removeItem("prompt_studio_autosave_v1"); // safe duplicate
+  localStorage.removeItem("prompt_studio_autosave");    // in case you used this key
 
-  // Clear all inputs safely (including ones without type="text")
-  document.querySelectorAll("input").forEach(i => {
-    const t = (i.getAttribute("type") || "").toLowerCase();
-
-    // Skip buttons, file input, and range slider
-    if (t === "file" || t === "range" || t === "button" || t === "submit") return;
-
-    // Uncheck checkboxes
-    if (t === "checkbox") { i.checked = false; return; }
-
-    // Clear text-like inputs (including inputs with no type attribute)
-    i.value = "";
+  // 2) Reset all dropdowns
+  document.querySelectorAll("select").forEach(sel => {
+    sel.selectedIndex = 0;
+    sel.dispatchEvent(new Event("change", { bubbles: true }));
   });
+
+  // 3) Clear ALL text inputs (including inputs with no type attribute)
+  document.querySelectorAll("input").forEach(inp => {
+    const type = (inp.type || "").toLowerCase();
+
+    if (type === "file") return;
+    if (type === "range") return;
+
+    if (type === "checkbox") {
+      inp.checked = false;
+      inp.dispatchEvent(new Event("change", { bubbles: true }));
+      return;
+    }
+
+    inp.value = "";
+    inp.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+
+  // 4) Clear textareas
+  document.querySelectorAll("textarea").forEach(t => {
+    t.value = "";
+    t.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+
+  // 5) Force-clear the chip selections (Accessories + Props) explicitly
+  document.querySelectorAll("#accessoryChips input[type=checkbox]").forEach(cb => cb.checked = false);
+  document.querySelectorAll("#propChips input[type=checkbox]").forEach(cb => cb.checked = false);
+
+  // hide warnings
+  if ($("accWarn")) $("accWarn").style.display = "none";
+  if ($("propWarn")) $("propWarn").style.display = "none";
+
+  // 6) Restore defaults you WANT
+  $("verbosity").value = 2;
+  setVerbosityLabel();
+  if ($("seed")) $("seed").value = "4458271930";
+
+  // brand section hide
+  if ($("brandToggle")) $("brandToggle").checked = false;
+  toggleBrandFields();
+
+  // 7) Re-generate output
+  $("output").value = buildPrompt();
+}); 
 
   // Clear textareas
   document.querySelectorAll("textarea").forEach(t => t.value = "");
