@@ -867,6 +867,10 @@ window.onerror = function (msg, src, line, col) {
     alert("Init error: " + (e?.message || e));
   }
 });
+document.body.insertAdjacentHTML(
+  "afterbegin",
+  `<div id="dbgBottom" style="position:fixed;top:44px;right:8px;z-index:99999;background:#60a5fa;color:#000;padding:6px 10px;border-radius:10px;font:12px system-ui;">JS BOTTOM ✅</div>`
+);  
 </script>
 </body>
 </html>
