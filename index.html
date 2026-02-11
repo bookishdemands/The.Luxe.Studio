@@ -771,6 +771,41 @@
   }
 
   init();
+  // ===== SAFE CLEAR ALL =====
+(function(){
+  const clearBtn = document.getElementById("btnClear");
+  if (!clearBtn) return;
+
+  clearBtn.addEventListener("click", function(){
+
+    // Reset dropdowns
+    document.querySelectorAll("select").forEach(function(sel){
+      sel.selectedIndex = 0;
+      sel.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+
+    // Reset inputs
+    document.querySelectorAll("input").forEach(function(inp){
+      const type = (inp.type || "").toLowerCase();
+      if (type === "file" || type === "range") return;
+      if (type === "checkbox") {
+        inp.checked = false;
+        return;
+      }
+      inp.value = "";
+    });
+
+    // Reset textareas
+    document.querySelectorAll("textarea").forEach(function(t){
+      t.value = "";
+    });
+
+    // Clear output
+    const out = document.getElementById("output");
+    if (out) out.value = "";
+
+  });
+})();
 </script>
 </body>
 </html>
