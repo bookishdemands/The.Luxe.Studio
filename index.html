@@ -222,7 +222,6 @@
 
       <div class="btns">
         <button id="btnGenerate">Generate Prompt</button>
-        <button class="secondary" id="btnClear" type="button">Clear All</button>
         <button class="secondary" id="btnCopy">Copy</button>
         <button class="secondary" id="btnSave">Save Preset</button>
         <button class="secondary" id="btnLoad">Load Preset</button>
@@ -242,10 +241,7 @@
   </div>
 </div>
 
-
-<script>  
-document.title = "SCRIPT RUNNING ✅";
- 
+<script>
   // ========= OPTIONS (edit freely) =========
   const OPTIONS = {
     platformMode: ["ImageFX","Midjourney","Stable Diffusion","ChatGPT","Microsoft Designer","Bing Image Creator","Grok"],
@@ -317,12 +313,13 @@ document.title = "SCRIPT RUNNING ✅";
 
   function fillSelect(id, arr){
   const el = $(id);
-  if(!el) return;
+  if (!el) return;
 
-  // Add a blank placeholder option FIRST
   el.innerHTML =
     `<option value="">— Select —</option>` +
-    arr.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+    arr.map(v =>
+      `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`
+    ).join("");
 }
   function escapeHtml(s){
     return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
@@ -779,64 +776,7 @@ document.title = "SCRIPT RUNNING ✅";
     $("output").value = buildPrompt();
   }
 
-  
-// ===== CLEAR ALL (NO RESTORE) =====
-(function () {
-  const clearBtn = document.getElementById("btnClear");
-  if (!clearBtn) return;
-
-  clearBtn.addEventListener("click", () => {
-    // 1) Stop any autosave from restoring old selections
-    localStorage.removeItem("prompt_studio_autosave_v1");
-    localStorage.removeItem("prompt_studio_autosave");
-    localStorage.removeItem("prompt_studio_presets_v1");
-
-    // 2) Reset dropdowns (and trigger change so the UI updates)
-    document.querySelectorAll("select").forEach(sel => {
-  sel.value = ""; // reset to the placeholder option
-  sel.dispatchEvent(new Event("change", { bubbles: true }));
-});
-    });
-
-    // 3) Reset all inputs
-    document.querySelectorAll("input").forEach((inp) => {
-      const t = (inp.type || "").toLowerCase();
-
-      if (t === "file" || t === "range") return;
-
-      if (t === "checkbox") {
-        inp.checked = false;
-        return;
-      }
-
-      inp.value = "";
-      inp.dispatchEvent(new Event("input", { bubbles: true }));
-      inp.dispatchEvent(new Event("change", { bubbles: true }));
-    });
-
-    // 4) Reset textareas
-    document.querySelectorAll("textarea").forEach((ta) => {
-      ta.value = "";
-      ta.dispatchEvent(new Event("input", { bubbles: true }));
-      ta.dispatchEvent(new Event("change", { bubbles: true }));
-    });
-
-    // 5) Restore your default seed (optional)
-    const seed = document.getElementById("seed");
-    if (seed) seed.value = "4458271930";
-
-    // 6) Hide warnings if present
-    const accWarn = document.getElementById("accWarn");
-    const propWarn = document.getElementById("propWarn");
-    if (accWarn) accWarn.style.display = "none";
-    if (propWarn) propWarn.style.display = "none";
-
-    // 7) Clear output box if present
-    const out = document.getElementById("output");
-    if (out) out.value = "";
-  });
-})();
-document.addEventListener("DOMContentLoaded", init);  
+  document.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
 </html>
