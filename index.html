@@ -313,9 +313,14 @@
   const KEY = "prompt_studio_presets_v1";
 
   function fillSelect(id, arr){
-    const el = $(id);
-    el.innerHTML = arr.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
-  }
+  const el = $(id);
+  if(!el) return;
+
+  // Add a blank placeholder option FIRST
+  el.innerHTML =
+    `<option value="">— Select —</option>` +
+    arr.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join("");
+}
   function escapeHtml(s){
     return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
   }
@@ -784,9 +789,10 @@
     localStorage.removeItem("prompt_studio_presets_v1");
 
     // 2) Reset dropdowns (and trigger change so the UI updates)
-    document.querySelectorAll("select").forEach((sel) => {
-      sel.selectedIndex = 0;
-      sel.dispatchEvent(new Event("change", { bubbles: true }));
+    document.querySelectorAll("select").forEach(sel => {
+  sel.value = ""; // reset to the placeholder option
+  sel.dispatchEvent(new Event("change", { bubbles: true }));
+});
     });
 
     // 3) Reset all inputs
