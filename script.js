@@ -3,6 +3,29 @@
     platformMode: ["ImageFX","Midjourney","Stable Diffusion","ChatGPT","Microsoft Designer","Bing Image Creator","Grok"],
     privateBrand: ["None","Luxury house vibe (private)","Streetwear label vibe (private)","Minimal designer vibe (private)","90s supermodel vibe (private)","Custom (private)"],
     characterType: ["fictional human character","digital avatar character","fantasy character","paranormal character","stylized illustration character"],
+    const OPTIONS = {
+  platformMode: [...],
+  privateBrand: [...],
+  characterType: [...],
+
+  gender: [
+    "Female",
+    "Male",
+    "Androgynous",
+    "Non-binary",
+    "Custom"
+  ],
+
+  ageGroup: [
+    "Child",
+    "Teen",
+    "Young Adult (20s)",
+    "Adult (30s–40s)",
+    "Mature (50+)"
+  ],
+
+  stylePreset: [...],
+  characterStyle: [
     stylePreset: ["hyper-realistic lifestyle photo","cinematic editorial photo","glossy 3D stylized render","manhwa-inspired illustration","clean minimalist studio photo","street editorial photo","soft dreamy photo","high-contrast fashion photo","warm cozy candid photo","nighttime city cinematic photo"],
     characterStyle: [
 
