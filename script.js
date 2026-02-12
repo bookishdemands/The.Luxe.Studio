@@ -341,13 +341,15 @@
     const mode = s.platformMode;
     const vb = s.verbosity;
     const characterStyle = s.characterStyle;
+    const gender = s.gender;
+    const ageGroup = s.ageGroup;
 
     const accessories = (s.accessoriesMulti || []);
     const props = (s.propsMulti || []);
     const safeBrandLine = s.brandToggle ? "Style reference: luxury/designer-inspired (no logos)." : "";
 
     const subject = `Create an image of a ${s.characterType} in a ${s.stylePreset}${characterStyle ? `, ${characterStyle} style` : ""}.`;
-    const appearance = `Body: ${s.bodyType}. Complexion: ${s.complexion} with a ${s.undertone}. Expression: ${s.expression}. Pose: ${s.pose}.`;
+    const appearance = `Gender: ${gender}. Age: ${ageGroup}. Body: ${s.bodyType}. Complexion: ${s.complexion} ...`
     const hair = `Hair: ${s.hairTexture} texture, ${s.hairStyle}, ${s.hairLength}, ${s.hairPart}, ${s.hairFinish}; accessories: ${s.hairAccessories}.`;
     const beauty = `Makeup: ${s.baseFinish}, eyes: ${s.eyeMakeup}, lips: ${s.lipStyle}. Lashes: ${s.lashStyle}, ${s.lashLength}, ${s.lashCurl}, ${s.lashDensity}. Nails: ${s.nailType}, ${s.nailLength}, ${s.nailShape}, ${s.nailColor}, ${s.nailFinish}, art: ${s.nailArt}, accent: ${s.nailAccent}.`;
     const outfit = `Outfit: ${s.outfitAesthetic} — ${s.outfitPieces}; fit: ${s.outfitFit}; fabric: ${s.outfitFabric}; pattern: ${s.outfitPattern}. Shoes: ${s.shoes}. Color scheme: ${s.colorScheme}. Influence: ${s.styleInfluence}.`;
