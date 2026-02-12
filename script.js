@@ -1,26 +1,25 @@
  // ========= OPTIONS (edit freely) =========
   const OPTIONS = {
-    platformMode: ["ImageFX","Midjourney","Stable Diffusion","ChatGPT","Microsoft Designer","Bing Image Creator","Grok"],
-    privateBrand: ["None","Luxury house vibe (private)","Streetwear label vibe (private)","Minimal designer vibe (private)","90s supermodel vibe (private)","Custom (private)"],
-    characterType: ["fictional human character","digital avatar character","fantasy character","paranormal character","stylized illustration character"],
+  platformMode: ["ImageFX", "Midjourney", "Stable Diffusion", "ChatGPT"],
+  privateBrand: ["None"],
 
-  gender: [
-    "Female",
-    "Male",
-    "Androgynous",
-    "Non-binary",
-    "Custom"
+  characterType: [
+    "fictional human character",
+    "digital avatar character",
+    "fantasy character",
+    "paranormal character",
+    "stylized illustration character"
   ],
 
-  ageGroup: [
-    "Child",
-    "Teen",
-    "Young Adult (20s)",
-    "Adult (30s–40s)",
-    "Mature (50+)"
+  gender: ["Female", "Male", "Androgynous", "Non-binary", "Custom"],
+  ageGroup: ["Child", "Teen", "Young Adult (20s)", "Adult (30s–40s)", "Mature (50+)"],
+
+  stylePreset: [
+    "hyper-realistic lifestyle photo",
+    "cinematic editorial",
+    "studio portrait"
   ],
 
-  stylePreset: [...],
   characterStyle: [
     
   // Realistic
@@ -52,7 +51,6 @@
   "Dark Fantasy Stylized",
   "Soft Glam Illustration",
   "Luxury Influencer Render"
-
 ],
     bodyType: ["slim","curvy","plus-size","athletic","petite","tall statuesque"],
     complexion: ["deep brown","rich brown","medium brown","light brown","tan","olive","golden brown","porcelain"],
