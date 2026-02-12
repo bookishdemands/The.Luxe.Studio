@@ -3,10 +3,6 @@
     platformMode: ["ImageFX","Midjourney","Stable Diffusion","ChatGPT","Microsoft Designer","Bing Image Creator","Grok"],
     privateBrand: ["None","Luxury house vibe (private)","Streetwear label vibe (private)","Minimal designer vibe (private)","90s supermodel vibe (private)","Custom (private)"],
     characterType: ["fictional human character","digital avatar character","fantasy character","paranormal character","stylized illustration character"],
-    const OPTIONS = {
-  platformMode: [...],
-  privateBrand: [...],
-  characterType: [...],
 
   gender: [
     "Female",
