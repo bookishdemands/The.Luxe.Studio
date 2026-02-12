@@ -1,5 +1,4 @@
-<script>
-  // ========= OPTIONS (edit freely) =========
+ // ========= OPTIONS (edit freely) =========
   const OPTIONS = {
     platformMode: ["ImageFX","Midjourney","Stable Diffusion","ChatGPT","Microsoft Designer","Bing Image Creator","Grok"],
     privateBrand: ["None","Luxury house vibe (private)","Streetwear label vibe (private)","Minimal designer vibe (private)","90s supermodel vibe (private)","Custom (private)"],
@@ -571,4 +570,3 @@
   });
 })();
   document.addEventListener("DOMContentLoaded", init);
-</script>
