@@ -11,7 +11,7 @@
     "stylized illustration character"
   ],
 
-  gender: ["Female", "Male", "Androgynous", "Non-binary", "Custom"],
+  gender: ["Female", "Male", "Androgynous", "Non-binary"],
   ageGroup: ["Child", "Teen", "Young Adult (20s)", "Adult (30s–40s)", "Mature (50+)"],
 
   stylePreset: [
