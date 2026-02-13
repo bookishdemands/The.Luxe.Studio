@@ -43,8 +43,8 @@
 
   // 3D / CGI
   "3D CGI Realistic",
-  "Pixar-Style 3D",
-  "Bratz-Inspired 3D",
+  "Whimsical 3D Family Animation",
+  "Fashion Doll 3D Glam",
   "Toy-Like Render (Controlled Gloss)",
 
   // Specialty
