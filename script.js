@@ -193,6 +193,7 @@
       platformMode: v("platformMode"),
       verbosity: Number($("verbosity").value),
       seed: v("seed"),
+      useRandomSeed: $("useRandomSeed").checked,
       negative: v("negative"),
       brandToggle: $("brandToggle").checked,
       privateBrand: v("privateBrand"),
@@ -335,7 +336,10 @@
     const characterStyle = s.characterStyle;
     const gender = v("gender");
     const ageGroup = v("ageGroup");
-
+    const useRandomSeed = s.useRandomSeed;let seed = s.seed;
+    if (useRandomSeed) {
+     seed = Math.floor(Math.random() * 9999999999);
+}
     const accessories = (s.accessoriesMulti || []);
     const props = (s.propsMulti || []);
     const safeBrandLine = s.brandToggle ? "Style reference: luxury/designer-inspired (no logos)." : "";
