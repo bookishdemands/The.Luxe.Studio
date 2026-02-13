@@ -508,14 +508,18 @@
 
     $("rndCharacter").addEventListener("click", ()=>{
       randomize([
-        ["characterType", OPTIONS.characterType],
-        ["stylePreset", OPTIONS.stylePreset],
-        ["bodyType", OPTIONS.bodyType],
-        ["complexion", OPTIONS.complexion],
-        ["undertone", OPTIONS.undertone],
-        ["expression", OPTIONS.expression],
-        ["pose", OPTIONS.pose],
-      ]);
+  ["characterType", OPTIONS.characterType],
+  ["gender", OPTIONS.gender],
+  ["ageGroup", OPTIONS.ageGroup],
+  ["characterStyle", OPTIONS.characterStyle],
+
+  ["stylePreset", OPTIONS.stylePreset],
+  ["bodyType", OPTIONS.bodyType],
+  ["complexion", OPTIONS.complexion],
+  ["undertone", OPTIONS.undertone],
+  ["expression", OPTIONS.expression],
+  ["pose", OPTIONS.pose],
+]);
       $("customCharacter").value = "";
     });
 
