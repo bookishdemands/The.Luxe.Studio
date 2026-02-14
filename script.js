@@ -281,6 +281,7 @@
       accessoriesMulti: getChipSelections("accessoryChips"),
 
       setting: v("setting"),
+      removeShadows: $("removeShadows")?.checked || false,
       lighting: v("lighting"),
       view: v("view"),
       angle: v("angle"),
@@ -298,7 +299,8 @@
     $("verbosity").value = String(s.verbosity ?? 2); setVerbosityLabel();
     $("seed").value = s.seed || "";
     $("negative").value = s.negative || "";
-
+    if ($("removeShadows")) $("removeShadows").checked = !!s.removeShadows;
+   
     $("brandToggle").checked = !!s.brandToggle;
     toggleBrandFields();
     fillVal("privateBrand", s.privateBrand);
@@ -357,6 +359,7 @@
     fillVal("theme", s.theme);
     $("extraScene").value = s.extraScene || "";
     setChipSelections("propChips", s.propsMulti || []);
+    enforceBackgroundRules();
   }
 
   function fillVal(id, val){
