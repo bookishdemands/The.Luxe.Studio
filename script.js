@@ -171,7 +171,21 @@
     const n = Number($("verbosity").value);
     $("verbosityLabel").textContent = n===1 ? "Minimal" : n===2 ? "Standard" : "Ultra";
   }
+  function setFieldHidden(inputId, hidden) {
+  const el = $(inputId);
+  if (!el) return;
 
+  // Your inputs/selects live inside <div class="field ...">
+  const field = el.closest(".field");
+  if (field) field.style.display = hidden ? "none" : "";
+}
+
+function clearFieldValue(inputId) {
+  const el = $(inputId);
+  if (!el) return;
+  if (el.tagName === "SELECT") el.value = "";
+  else el.value = "";
+}
   function renderChips(containerId, items, max, warnId){
     const box = $(containerId);
     box.innerHTML = "";
@@ -223,7 +237,7 @@
       ? names.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join("")
       : `<option value="">(no presets yet)</option>`;
   }
-
+  
   function captureState(){
     const state = {
       platformMode: v("platformMode"),
@@ -454,7 +468,8 @@ if (isTransparentBg(bg)) {
   beauty,
   outfit,
   scene,
-  backgroundLine,   
+  backgroundLine,
+  shadowLine,
   extras,
   seedLine,
   safeBrandLine,
@@ -468,6 +483,7 @@ if (isTransparentBg(bg)) {
   outfit,
   scene,
   backgroundLine,
+  shadowLine,
   extras,
   seedLine,
   safeBrandLine,
