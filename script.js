@@ -1,4 +1,7 @@
- // ========= OPTIONS (edit freely) =========
+window.onerror = function (msg, url, line, col, err) {
+  alert(`JS Error: ${msg}\nLine: ${line}:${col}`);
+};
+// ========= OPTIONS (edit freely) =========
   const OPTIONS = {
   platformMode: ["ImageFX", "Midjourney", "Stable Diffusion", "ChatGPT", "Microsoft Designer", "Bing AI"],
   privateBrand: ["None"],
