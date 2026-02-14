@@ -186,7 +186,10 @@ function clearFieldValue(inputId) {
   if (el.tagName === "SELECT") el.value = "";
   else el.value = "";
 }
-  function renderChips(containerId, items, max, warnId){
+  function needsTransparentExportHint(mode) {
+  return mode === "Microsoft Designer" || mode === "Bing AI" || mode === "ImageFX";
+}
+function renderChips(containerId, items, max, warnId){
     const box = $(containerId);
     box.innerHTML = "";
     items.forEach((label, idx) => {
@@ -380,11 +383,33 @@ function clearFieldValue(inputId) {
     if(!$(id)) return;
     if(val) $(id).value = val;
   }
+function formatLinesForPlatform(mode, lines) {
+  const clean = lines.filter(Boolean);
 
+  if (mode === "Microsoft Designer" || mode === "Bing AI" || mode === "ImageFX") {
+    return clean.join(". ").replace(/\s+/g, " ").trim();
+  }
+
+  if (mode === "Midjourney") {
+    return clean.join(", ");
+  }
+
+  if (mode === "Stable Diffusion" || mode === "SDXL") {
+    return clean.join("\n");
+  }
+
+  return clean.join("\n");
+}
   // ========= Prompt Builder =========
   function buildPrompt(){
     const s = captureState();
     const mode = s.platformMode;
+const bg = s.background;
+
+let exportLine = "";
+if (isTransparentBg(bg) && needsTransparentExportHint(mode)) {
+  exportLine = "Export: transparent PNG (alpha channel), no background layer.";
+}
     const vb = s.verbosity;
     const characterStyle = s.characterStyle;
     const gender = v("gender");
@@ -436,7 +461,37 @@ if (removeShadows) {
 if (isTransparentBg(bg)) {
   shadowLine = "Shadows: none (no cast shadow, no contact shadow).";
 }
-    const accessories = (s.accessoriesMulti || []);
+   const bg = s.background;
+
+let stickerLine = "";
+if (bg === "Transparent Background (Sticker PNG Clean Cut)") {
+  stickerLine =
+    "Sticker cut: keep subject fully inside frame with 8–12% safe margin around edges; no cropping; leave clean contour space for outline.";
+}
+    function formatLinesForPlatform(mode, lines) {
+  const clean = lines.filter(Boolean);
+
+  // Default: plain paragraph style
+  if (!mode || mode === "ChatGPT") return clean.join("\n");
+
+  if (mode === "Midjourney") {
+    // MJ prefers one-liner; keep it readable, keep seed separate if you do --seed
+    return clean.join(", ");
+  }
+
+  if (mode === "Stable Diffusion" || mode === "SDXL") {
+    // SD often likes labeled lines
+    return clean.join("\n");
+  }
+
+  if (mode === "Microsoft Designer" || mode === "Bing AI" || mode === "ImageFX") {
+    // These do well with short labeled lines; avoid too much parameter talk
+    return clean.join("\n");
+  }
+
+  return clean.join("\n");
+}
+   const accessories = (s.accessoriesMulti || []);
     const props = (s.propsMulti || []);
     const safeBrandLine = s.brandToggle ? "Style reference: luxury/designer-inspired (no logos)." : "";
 
@@ -468,12 +523,14 @@ if (isTransparentBg(bg)) {
   beauty,
   outfit,
   scene,
-  backgroundLine,
-  shadowLine,
-  extras,
-  seedLine,
-  safeBrandLine,
-  constraints
+backgroundLine,
+exportLine,
+stickerLine,
+shadowLine,
+extras,
+seedLine,
+safeBrandLine,
+constraints
 ].filter(Boolean);
     const ultra = [
   subject,
@@ -482,12 +539,14 @@ if (isTransparentBg(bg)) {
   beauty,
   outfit,
   scene,
-  backgroundLine,
-  shadowLine,
-  extras,
-  seedLine,
-  safeBrandLine,
-  constraints
+backgroundLine,
+exportLine,
+stickerLine,
+shadowLine,
+extras,
+seedLine,
+safeBrandLine,
+constraints
 ].filter(Boolean);
 
     const base = vb===1 ? minimal : vb===2 ? standard : ultra;
@@ -537,10 +596,8 @@ if (isTransparentBg(bg)) {
     }
 
     // ImageFX default
-    return base.join("\n") +
-      (s.negative ? `\nNegative: ${s.negative}` : "") +
-      (s.seed ? `\nSeed: ${s.seed}` : "");
-  }
+    const baseLines = (vb===1 ? minimal : vb===2 ? standard : ultra);
+return formatLinesForPlatform(mode, baseLines);
 
   // ========= Actions =========
   function toggleBrandFields(){
@@ -566,7 +623,6 @@ if (isTransparentBg(bg)) {
       document.execCommand("copy"); alert("Copied!");
     }
   }
-
   // ========= Init =========
   function init(){
     // fill selects
@@ -596,40 +652,53 @@ function isProductBg(bg) {
          bg === "Transparent Background (Sticker PNG Clean Cut)";
 }
 
-function enforceBackgroundRules() {
+ function enforceBackgroundRules() {
   const bg = v("background");
+  const transparent =
+    bg === "Transparent Background (PNG)" ||
+    bg === "Transparent Background (Sticker PNG Clean Cut)";
+  const sticker =
+    bg === "Transparent Background (Sticker PNG Clean Cut)";
+  const product =
+    bg === "Isolated on White (Product Style)" || transparent;
 
-  const transparent = isTransparentBg(bg);
-  const product = isProductBg(bg);
+  // ---- 1️⃣ Hide environment controls completely when transparent ----
+  setFieldHidden("setting", transparent);
+  setFieldHidden("theme", transparent);
+  setFieldHidden("extraScene", transparent);
 
-  // 1) Auto-disable environment words when transparent is selected
-  // (disable Setting + Theme + extraScene; keep Lighting/View/Angle/Lens usable if you want)
-  setDisabled("setting", transparent);
-  setDisabled("theme", transparent);
-  // extraScene is an INPUT not select; disable & clear it:
-  const extra = $("extraScene");
-  if (extra) {
-    extra.disabled = transparent;
-    if (transparent) extra.value = "";
+  if (transparent) {
+    clearFieldValue("setting");
+    clearFieldValue("theme");
+    clearFieldValue("extraScene");
   }
 
-  // 2) Auto-force centered composition for product PNG
-  // We'll do this in prompt text via backgroundLine, but you can also enforce camera/view defaults:
+  // ---- 2️⃣ Auto-center composition for product PNG ----
   if (product) {
-    // Optional: force a default view if your view options include a centered/frontal one
-    // Example:
-    // if ($("view") && !v("view")) $("view").value = "Centered";
+    if ($("view") && !$("view").value) {
+      $("view").value = "Eye-Level";
+    }
+    if ($("angle") && !$("angle").value) {
+      $("angle").value = "Straight-On";
+    }
   }
 
-  // 3) Shadow removal toggle:
-  // Auto-check & lock ON for transparent backgrounds
+  // ---- 3️⃣ Shadow removal logic ----
   const rs = $("removeShadows");
   if (rs) {
     if (transparent) {
       rs.checked = true;
-      rs.disabled = true;  // lock it for transparent to prevent accidental shadows
+      rs.disabled = true;
     } else {
-      rs.disabled = false; // allow user to control it for non-transparent
+      rs.disabled = false;
+    }
+  }
+
+  // ---- 4️⃣ Sticker safety margin auto-add ----
+  const extra = $("extraScene");
+  if (sticker && extra) {
+    if (!extra.value.includes("sticker outline safe margin")) {
+      extra.value = (extra.value + " sticker outline safe margin.").trim();
     }
   }
 }
