@@ -555,6 +555,61 @@ if (s.background === "Isolated on White (Product Style)") {
     renderChips("accessoryChips", OPTIONS.multiAccessories, 3, "accWarn");
     renderChips("propChips", OPTIONS.multiProps, 3, "propWarn");
 
+    function setDisabled(id, disabled) {
+  const el = $(id);
+  if (!el) return;
+  el.disabled = disabled;
+  if (disabled && el.tagName === "SELECT") el.value = "";
+}
+
+function isTransparentBg(bg) {
+  return bg === "Transparent Background (PNG)" ||
+         bg === "Transparent Background (Sticker PNG Clean Cut)";
+}
+
+function isProductBg(bg) {
+  return bg === "Isolated on White (Product Style)" ||
+         bg === "Transparent Background (PNG)" ||
+         bg === "Transparent Background (Sticker PNG Clean Cut)";
+}
+
+function enforceBackgroundRules() {
+  const bg = v("background");
+
+  const transparent = isTransparentBg(bg);
+  const product = isProductBg(bg);
+
+  // 1) Auto-disable environment words when transparent is selected
+  // (disable Setting + Theme + extraScene; keep Lighting/View/Angle/Lens usable if you want)
+  setDisabled("setting", transparent);
+  setDisabled("theme", transparent);
+  // extraScene is an INPUT not select; disable & clear it:
+  const extra = $("extraScene");
+  if (extra) {
+    extra.disabled = transparent;
+    if (transparent) extra.value = "";
+  }
+
+  // 2) Auto-force centered composition for product PNG
+  // We'll do this in prompt text via backgroundLine, but you can also enforce camera/view defaults:
+  if (product) {
+    // Optional: force a default view if your view options include a centered/frontal one
+    // Example:
+    // if ($("view") && !v("view")) $("view").value = "Centered";
+  }
+
+  // 3) Shadow removal toggle:
+  // Auto-check & lock ON for transparent backgrounds
+  const rs = $("removeShadows");
+  if (rs) {
+    if (transparent) {
+      rs.checked = true;
+      rs.disabled = true;  // lock it for transparent to prevent accidental shadows
+    } else {
+      rs.disabled = false; // allow user to control it for non-transparent
+    }
+  }
+}
     $("verbosity").addEventListener("input", setVerbosityLabel);
     setVerbosityLabel();
 
